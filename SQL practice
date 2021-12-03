@@ -1,0 +1,102 @@
+--Table creation for coffee shop example
+
+CREATE TABLE COFFEE_SHOP(
+shop_id INT,
+shop_name VARCHAR(50),
+city VARCHAR(50),
+state CHAR(2),
+PRIMARY KEY (shop_id));
+
+CREATE TABLE SUPPLIER(
+supplier_id INT,
+company_name VARCHAR(50),
+country VARCHAR(30),
+sales_contact_name VARCHAR(60),
+email VARCHAR(50) NOT NULL,
+PRIMARY KEY (supplier_id));
+
+CREATE TABLE COFFEE(
+coffee_id INT,
+shop_id INT,
+supplier_id INT,
+coffee_name VARCHAR(30),
+price_per_pound NUMERIC(5,2),
+PRIMARY KEY (coffee_id),
+FOREIGN KEY (shop_id) REFERENCES COFFEE_SHOP(shop_id),
+FOREIGN KEY (supplier_id) REFERENCES SUPPLIER (supplier_id));
+
+CREATE TABLE EMPLOYEE (
+employee_id INT,
+first_name VARCHAR(30),
+last_name VARCHAR(30),
+hire_date DATE,
+job_title VARCHAR(30),
+shop_id INT,
+PRIMARY KEY (employee_id),
+FOREIGN KEY (shop_id) REFERENCES COFFEE_SHOP(shop_id));
+
+--value insertion
+
+INSERT INTO COFFEE_SHOP
+VALUES ('123', 'DAVES', 'COLORADOSPRINGS', 'CO');
+
+INSERT INTO SUPPLIER
+VALUES ('132', 'SUPPLYCO', 'UNITEDSTATES', 'JIM', 'JIMMY@GMAIL.COM');
+
+INSERT INTO COFFEE
+VALUES ('231', '123', '132', 'NOSUGAR_NOCREAM', '5.30');
+
+INSERT INTO EMPLOYEE
+VALUES ('1', 'BOB', 'HILL', '2021-01-01', 'SERVER', '123');
+
+INSERT INTO COFFEE_SHOP
+VALUES ('456', 'JIMMYS', 'FALCON', 'CO');
+
+INSERT INTO SUPPLIER
+VALUES ('465', 'GRINDERS', 'UNITEDSTATES', 'JAMES', 'JAMES@GMAIL.COM');
+
+INSERT INTO COFFEE
+VALUES ('546', '456', '465', 'SUPERSWEET', '5.80');
+
+INSERT INTO EMPLOYEE
+VALUES ('2', 'HANK', 'HILL', '2015-01-01', 'HOST', '456');
+
+INSERT INTO COFFEE_SHOP
+VALUES ('789', 'TIMMYS', 'PEYTON', 'CO');
+
+INSERT INTO SUPPLIER
+VALUES ('798', 'COFFEE_R_US', 'UNITEDSTATES', 'MILES', 'MILES@GMAIL.COM');
+
+INSERT INTO COFFEE
+VALUES ('879', '789', '798', 'MINTY', '6.20');
+
+INSERT INTO EMPLOYEE
+VALUES ('3', 'PEGGY', 'HILL', '2018-01-01', 'CHEF', '789');
+
+--view creation
+
+CREATE VIEW EMPLOYEE_INFO AS
+SELECT employee_id,
+CONCAT(first_name, ' ', last_name) AS employee_full_name, hire_date,
+job_title, shop_id
+FROM EMPLOYEE;
+
+-- SFW Query
+
+SELECT *
+FROM EMPLOYEE
+WHERE hire_date > '2016-01-01';
+
+--Joining tables
+
+SELECT CF.shop_name, C.coffee_name, S.supplier_id,
+S.company_name
+FROM COFFEE_SHOP AS CF
+INNER JOIN COFFEE AS C ON CF.shop_id=C.shop_id
+INNER JOIN SUPPLIER AS S ON C.supplier_id=S.supplier_id;
+
+--Indexing
+
+CREATE INDEX FIND_COFFEE_NAME
+ON COFFEE (coffee_name);
+
